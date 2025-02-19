@@ -1,1 +1,1 @@
-print("hellowold|satya|--)-")
+print("heltya|--)-")

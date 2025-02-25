@@ -102,7 +102,42 @@ Run the following command:
 docker-compose up -d
 ```
 
-## Step 8: Cleanup (If Needed)
+## Step 8: Creating Jenkins Container Using Dockerfile with Python
+
+You can also create a Jenkins container using a `Dockerfile` with Python pre-installed. Create a `Dockerfile` with the following content:
+
+```Dockerfile
+FROM jenkins/jenkins:lts
+USER root
+RUN apt-get update && apt-get install -y python3 python3-pip
+USER jenkins
+```
+
+Then, build and run the container:
+
+```sh
+docker build -t jenkins-python .
+docker run -d --name jenkins-docker   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins_home:/var/jenkins_home   --group-add $(getent group docker | cut -d: -f3)   -p 8080:8080 -p 50000:50000 <image_name>
+```
+
+## Step 9: Login to Jenkins Without Credentials
+
+If you need to bypass authentication, login to the Jenkins container and remove the user configuration:
+
+```sh
+docker exec -it jenkins bash
+rm -rf /var/jenkins_home/users
+rm /var/jenkins_home/config.xml
+exit
+```
+
+Then restart Jenkins:
+
+```sh
+docker restart jenkins
+```
+
+## Step 10: Cleanup (If Needed)
 
 To stop and remove Jenkins container:
 ```sh
